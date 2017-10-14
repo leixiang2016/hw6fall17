@@ -1,5 +1,8 @@
 class MoviesController < ApplicationController
 
+  require 'themoviedb'
+  Tmdb::Api.key("f4702b08c0ac6ea5b51425788bb26562")
+  
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
@@ -62,7 +65,31 @@ class MoviesController < ApplicationController
   end
   
   def search_tmdb
-    @movies=Movie.find_in_tmdb(params[:search_terms])
+    #@movies=Movie.find_in_tmdb(params[:search_terms])
+    @search_terms = params[:search_terms]
+    if @search_terms.to_s.strip.length == 0
+      flash[:notice] = "Invalid search term"
+      redirect_to movies_path
+    else
+      @movies=Movie.find_in_tmdb(@search_terms)
+      if @movies == []
+        flash[:notice] = "No matching movies were found on TMDb"
+        redirect_to movies_path
+      end
+    end
+  end
+  
+  def add_tmdb
+    if(params[:tmdb_movies] == nil)
+      flash[:notice] = "No movies selected"
+      redirect_to movies_path
+    else
+      params[:tmdb_movies].each do |movie|
+        Movie.create_from_tmdb(movie[0])
+      end
+       flash[:notice] = "Movies successfully added to Rotten Potatoes"
+       redirect_to movies_path
+    end
   end
 
 end
