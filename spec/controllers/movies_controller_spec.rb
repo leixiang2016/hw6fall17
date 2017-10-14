@@ -68,7 +68,6 @@ describe MoviesController do
     it 'should call the model method that performs create_from_tmdb' do
         Movie.should_receive(:create_from_tmdb).with('406234')
         post :add_tmdb, {"utf8"=>"✓", "tmdb_movies"=>{"406234"=>"1"}, "commit"=>"Add Selected Movies", "id"=>"search_tmdb"}
-        # "checkbox"=>{"406234"=>"1"}, "commit"=>"Add Selected Movies", "id"=>"search_tmdb"
         expect(flash[:notice]).to be_present
     end
     it 'should notify No movies selected and redirect to movies' do
@@ -89,4 +88,5 @@ describe MoviesController do
       post :add_tmdb, movies
     end
   end
+
 end
