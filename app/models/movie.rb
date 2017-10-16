@@ -17,7 +17,7 @@ class Movie < ActiveRecord::Base
     results = []
     begin
       if string == "" || string == nil
-        return nil
+        return []
       end
       search_results = Tmdb::Movie.find(string)
       if search_results != nil && !search_results.empty?
